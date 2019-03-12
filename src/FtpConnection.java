@@ -103,7 +103,7 @@ public class FtpConnection
         Socket datacon = getDataconnection();
         BufferedReader dataOut = new BufferedReader(new InputStreamReader(
                 datacon.getInputStream()));
-        sendCommando(commando); // f.eks LIST eller RETR fil.txt
+        sendCommando(commando); // Could be LIST eller RETR fil.txt,
         StringBuilder sb = new StringBuilder();
         String s = dataOut.readLine();
         while (s != null) {
