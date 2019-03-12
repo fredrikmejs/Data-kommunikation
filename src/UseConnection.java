@@ -6,7 +6,7 @@ public class UseConnection {
         Scanner scan = new Scanner(System.in);
         FtpConnection f = new FtpConnection();
 
-        f.connect("speedtest.tele2.net ","anonymous","anonymous");
+        f.connect("speedtest.tele2.net","anonymous","anonymous");
 
         // få liste over kommandoer som tjenesten kender
         f.recieveText("LIST");     // get a list of files from the host
