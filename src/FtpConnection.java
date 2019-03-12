@@ -36,7 +36,7 @@ public class FtpConnection
     {
         System.out.println("send: "+commando);
         out.println(commando);
-        out.flush();         // makes sure the data is sended to the host before we reads the answer
+        out.flush();         // makes sure the data is sent to the host before we read the answer
         return readAnswer();
     }
 
@@ -59,7 +59,7 @@ public class FtpConnection
 
 
     /**
-     * Gets an connection made to send date (files) to or from the host
+     * Gets a connection made to send data (files) to or from the host
      * @return the connection to the host
      * @throws IOException
      */
@@ -116,4 +116,6 @@ public class FtpConnection
         readAnswer();
         return sb.toString(); // returnér en streng med de data vi fik fra værten
     }
+
+
 }
