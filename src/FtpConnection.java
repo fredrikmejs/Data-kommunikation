@@ -84,7 +84,7 @@ public class FtpConnection
     {
         Socket dataCon = getDataconnection();
         PrintStream dataout = new PrintStream( dataCon.getOutputStream() );
-        sendCommando(commando);        /* TODO måske formuleres anerledes */ // f.eks STOR fil.txt
+        sendCommando(commando);        /* TODO måske formuleres anerledes */ // con.eks STOR fil.txt
         dataout.print(data);
         dataout.close();
         dataCon.close();

@@ -14,7 +14,7 @@ public class Client{
             control = new Socket("test.rebex.net",21);
             out = new PrintStream(control.getOutputStream());
             in = new BufferedReader(new InputStreamReader(control.getInputStream()));
-            System.out.println(in.readLine());                     // reads the welcome message from the host
+            System.out.println(in.readLine());  // reads the welcome message from the host
             out.println("USER demo");// sends the usernameSend
             out.flush();
             System.out.println(in.readLine());
@@ -26,7 +26,9 @@ public class Client{
             out.println("list");
             out.flush();
             System.out.println(in.readLine());
-           /* DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+
+
+            /*DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
             modifiedSentence = inFromServer.readLine();
@@ -36,9 +38,9 @@ public class Client{
             outToServer.writeBytes( "USER demo"+ '\n');
 
             System.out.println(inFromServer.readLine());
-            */
 
-            //clientSocket.close();
+
+            clientSocket.close();*/
         }
 }
 
