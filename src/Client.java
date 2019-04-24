@@ -8,39 +8,103 @@ public class Client{
 
         public static void main(String[] argv) throws IOException {
             Socket control;
+            Socket dataSocket;
             PrintStream out;
             BufferedReader in;
-            String line;
-            StringBuilder fullText = new StringBuilder();
 
-            control = new Socket("test.rebex.net",21);
+
+            control = new Socket("ftp.dlptest.com", 21);
             out = new PrintStream(control.getOutputStream());
             in = new BufferedReader(new InputStreamReader(control.getInputStream()));
-            System.out.println(in.readLine());                     // reads the welcome message from the host
-            out.println("USER demo");// sends the usernameSend
-            out.flush();
-            System.out.println(in.readLine());
 
-            out.println("PASS password");
+
+            for(Object o : in.lines().toArray()){
+                System.out.println(o);
+            }
+
+            StringBuilder builder = new StringBuilder();
+            String str;
+            while ((str = in.readLine()) != null){
+                builder.append(str);
+                builder.append("\n");
+            }
+            System.out.println(builder); // reads the welcome message from the host
+
+            out.println("USER dlpuser@dlptest"); // sends the usernameSend
             out.flush();
-            System.out.println(in.readLine());
+            builder = new StringBuilder();
+            while (true){
+                str = in.readLine();
+                if (str == null){
+                    break;
+                }
+                builder.append(str);
+            }
+            System.out.println(builder);
+
+            out.println("PASS 5p2tvn92R0di8FdiLCfzeeT0b");
+            out.flush();
+            builder = new StringBuilder();
+            while (true){
+                str = in.readLine();
+                if (str == null){
+                    break;
+                }
+                builder.append(str);
+            }
+            System.out.println(builder);
 
             out.println("SYST");
             out.flush();
-            System.out.println(in.readLine());
+            builder = new StringBuilder();
+            while (true){
+                str = in.readLine();
+                if (str == null){
+                    break;
+                }
+                builder.append(str);
+            }
+            System.out.println(builder);
 
             out.println("PWD");
             out.flush();
-            System.out.println(in.readLine());
+            builder = new StringBuilder();
+            while (true){
+                str = in.readLine();
+                if (str == null){
+                    break;
+                }
+                builder.append(str);
+            }
+            System.out.println(builder);
 
             out.println("PORT 130,225,93,166,14,178");
             out.flush();
-            System.out.println(in.readLine());
+            builder = new StringBuilder();
+            while (true){
+                str = in.readLine();
+                if (str == null){
+                    break;
+                }
+                builder.append(str);
+            }
+            System.out.println(builder);
 
             out.println("NLST");
             out.flush();
+            builder = new StringBuilder();
+            while (true){
+                str = in.readLine();
+                if (str == null){
+                    break;
+                }
+                builder.append(str);
+            }
+            System.out.println(builder);
 
-            in.lines().forEach(System.out::println);
+        }
+
+
 
             /*while( stream.//(line = in.readLine()) != null){
                 fullText.append(line);
@@ -57,12 +121,12 @@ public class Client{
             outToServer.writeBytes( "USER demo"+ '\n');
 
             System.out.println(inFromServer.readLine());
-            */
 
-            //clientSocket.close();
+
+            clientSocket.close();
         }
 
-   /* public String ReadBigStringIn(BufferedReader buffIn) throws IOException {
+        public String ReadBigStringIn(BufferedReader buffIn) throws IOException {
         StringBuilder everything = new StringBuilder();
         String line;
         while( (line = buffIn.readLine()) != null) {
