@@ -14,21 +14,35 @@ public class FTPT_UI {
         int selection;
 
         while (true) {
-            client.getDir();
             System.out.println("Choose an action:\n" +
-                    "\t\t0)\tquit\n" +
-                    "\t\t1)\tchange folder\n" +
-                    "\t\t2)\tdownload file\n" +
-                    "\t\t3)\tupload file\n");
+                    "\t\t0\tquit\n" +
+                    "\t\t1\tget directory\n" +
+                    "\t\t2\tchange folder\n" +
+                    "\t\t3\tdownload file\n" +
+                    "\t\t4\tupload file\n");
 
             selection = scan.nextInt();
             switch (selection){
                 case 0:
+                    System.out.println("Closing...");
                     scan.close();
                     client.close();
                     System.exit(0);
                     break;
                 case 1:
+                    client.getDir();
+                    break;
+                case 2:
+                    //TODO insert folder method
+                    break;
+                case 3:
+                    //TODO insert download method
+                    break;
+                case 4:
+                    //TODO insert upload method
+                    break;
+                default:
+                    System.out.println("Invalid command");
             }
         }
     }
