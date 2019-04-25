@@ -1,3 +1,5 @@
+package Example;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -69,7 +71,7 @@ public class FtpConnection
         StringTokenizer st = new StringTokenizer(machinePortNumber, "(,)");
         if (st.countTokens() < 7) throw new IOException("Not logged in");
         st.nextToken(); // Skips 5 steps before port number
-        st.nextToken(); st.nextToken(); st.nextToken(); st.nextToken();
+        st.nextToken();st.nextToken();st.nextToken();st.nextToken();
         int portNr = 256*Integer.parseInt(st.nextToken())
                 + Integer.parseInt(st.nextToken());
         return new Socket(control.getInetAddress(), portNr); // connect til porten
