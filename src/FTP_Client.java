@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Objects;
 
 public class FTP_Client {
     private Socket controlSocket; //sends commands to the server and receives the response
@@ -10,13 +11,16 @@ public class FTP_Client {
     private PrintStream dataOut;
     private BufferedReader dataIn;
 
+    private File localDir;
+
     public void startUp() throws IOException {
 
         connect("test.rebex.net", 21); //ftp.dlptest.com
         logIn("demo","password"); //"dlpuser@dlptest", "5p2tvn92R0di8FdiLCfzeeT0b"
         getSystem();
-        setupDataTransfer();
-
+        //setupDataTransfer();
+        localDir = new File(System.getProperty("user.home"));
+        System.out.println("local directory: " + localDir);
         System.out.println("\n\n---------------------------------------\n\n");
     }
 
@@ -85,6 +89,21 @@ public class FTP_Client {
         System.out.println("\n");
     }
 
+    public void getLocalDir() {
+        System.out.println("\"" + localDir + "\"" + " is current local directory.");
+        File[] dirList = localDir.listFiles();
+        if (dirList != null) {
+            for (File f : dirList) {
+                if (f.isDirectory()){
+                    System.out.println("<DIR>\t" + f.getName());
+                } else if (f.isFile()) {
+                    System.out.println("\t" + f.length() + " " + f.getName());
+                }
+            }
+        }
+        System.out.println("\n\n");
+    }
+
     /**
      * This is from our example project TODO remember to add the source to avoid plagiarism
      *
@@ -139,6 +158,79 @@ public class FTP_Client {
         conOut.flush();
         readConAnswer();
         getDir();
+    }
+
+    public void changeLocalDir (String directory) {
+        if (directory.equalsIgnoreCase("..")) {
+            localDir = localDir.getParentFile();
+        } else {
+            File temp = new File(localDir + "/" + directory);
+            if (temp.exists() && temp.isDirectory()) {
+                localDir = temp;
+                getLocalDir();
+            } else {
+                System.out.println("Directory not found");
+            }
+        }
+    }
+
+    public void downloadFile (String fileName) throws IOException {
+        conOut.println("SIZE " + fileName);
+        conOut.flush();
+        int size = Integer.parseInt(conIn.readLine().split(" ")[1]);
+
+        setupDataTransfer();
+        conOut.println("RETR " + fileName);
+        conOut.flush();
+        readConAnswer();
+
+        if (size < 1024) {
+            String s;
+            while ((s = dataIn.readLine()) != null) {
+                System.out.println(s);
+            }
+        } else {
+            File newFile = new File(localDir + "/" + fileName);
+            if (newFile.exists()) {
+                System.out.println("Aborted! A file would have been overwritten.");
+            } else {
+                if (!newFile.createNewFile()) {
+                    System.out.println("Error: Couldn't create file.");
+                    return;
+                }
+                PrintWriter writer = new PrintWriter(new FileWriter(newFile));
+
+                String s;
+                while ((s = dataIn.readLine()) != null) {
+                    writer.println(s);
+                }
+                writer.close();
+                System.out.println("Downloaded file to: " + newFile);
+            }
+
+        }
+    }
+
+    public void uploadFile (String fileName) throws IOException {
+        File file = new File(localDir + "/" + fileName);
+        if (!file.exists() && file.isFile()) {
+            System.out.println("Error: File [" + file + "] doesn't exist");
+            return;
+        }
+        BufferedReader reader =  new BufferedReader(new FileReader(file));
+
+        setupDataTransfer();
+        conOut.println("STOR " + fileName);
+        conOut.flush();
+        readConAnswer();
+
+        String s;
+        while ((s = reader.readLine()) != null) {
+            System.out.println(s); //TODO send to server instead of printing it
+        }
+
+        readConAnswer();
+
     }
 
 }

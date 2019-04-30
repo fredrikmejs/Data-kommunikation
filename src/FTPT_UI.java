@@ -1,4 +1,6 @@
+import java.io.File;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class FTPT_UI {
@@ -18,12 +20,14 @@ public class FTPT_UI {
             System.out.println("Choose an action:\n" +
                     "\t\t0\tquit\n" +
                     "\t\t1\tget directory\n" +
-                    "\t\t2\tchange folder\n" +
-                    "\t\t3\tdownload file\n" +
-                    "\t\t4\tupload file\n");
+                    "\t\t2\tget local directory\n" +
+                    "\t\t3\tchange folder\n" +
+                    "\t\t4\tchange local folder\n" +
+                    "\t\t5\tdownload file\n" +
+                    "\t\t6\tupload file\n");
 
             selection = scanInt.nextInt();
-            switch (selection){
+            switch (selection) {
                 case 0:
                     System.out.println("Closing...");
                     scanInt.close();
@@ -34,14 +38,23 @@ public class FTPT_UI {
                     client.getDir();
                     break;
                 case 2:
+                    client.getLocalDir();
+                    break;
+                case 3:
                     System.out.println("Which folder do you want to go to? (write \"..\" to go back)");
                     client.changeDir(scanln.nextLine());
                     break;
-                case 3:
-                    //TODO insert download method
-                    break;
                 case 4:
-                    //TODO insert upload method
+                    System.out.println("Which folder do you want to go to? (write \"..\" to go back)");
+                    client.changeLocalDir(scanln.nextLine());
+                    break;
+                case 5:
+                    System.out.println("Enter file name:");
+                    client.downloadFile(scanln.nextLine());
+                    break;
+                case 6:
+                    System.out.println("Enter file location:");
+                    client.uploadFile(new File(scanln.nextLine()));
                     break;
                 default:
                     System.out.println("Invalid command");
