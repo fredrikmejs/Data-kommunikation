@@ -60,26 +60,29 @@ public class FTP_Client {
         conOut.println("PASV");
         String[] reply = readConAnswer().replace(").", "").split("," );
         port = 256 * Integer.parseInt(reply[4]) + Integer.parseInt(reply[5]);
-        System.out.println("---- connecting to port " + port + " ----");
 
         dataSocket = new Socket(controlSocket.getInetAddress(), port); //TODO change ths to passive
         dataOut = new PrintStream(dataSocket.getOutputStream());
         dataIn = new BufferedReader(new InputStreamReader(dataSocket.getInputStream()));
-        System.out.println("---- connected ----");
         conOut.flush();
     }
 
     public void getDir() throws IOException {
+        setupDataTransfer();
         conOut.println("PWD"); //Print the working directory on the remote machine
         conOut.flush();
         readConAnswer();
 
         conOut.println("LIST"); //gets content of remote directory
         conOut.flush();
+        readConAnswer();
+
         String s;
         while ((s = dataIn.readLine()) != null) {
             System.out.println(s);
         }
+        readConAnswer();
+        System.out.println("\n");
     }
 
     /**
@@ -100,6 +103,10 @@ public class FTP_Client {
     }
 
     public void close() throws IOException {
+        conOut.println("quit");
+        conOut.flush();
+        readConAnswer();
+
         controlSocket.close();
         conIn.close();
         conOut.close();
@@ -107,6 +114,31 @@ public class FTP_Client {
         dataSocket.close();
         dataIn.close();
         dataOut.close();
+    }
+
+    public void changeDir(String directory) throws IOException {
+        StringBuilder command = new StringBuilder();
+        command.append("CWD ");
+
+        if (directory.equalsIgnoreCase("..")){
+            conOut.println("PWD");
+            conOut.flush();
+            String temp = conIn.readLine();
+            String currentDir = temp.split("[\"]")[1];
+            String[] adress = currentDir.split("/");
+            currentDir = "";
+            for (int i = 0; i < adress.length - 1; i++) {
+                currentDir = currentDir.concat("/" + adress[i]);
+            }
+            command.append(currentDir);
+        } else {
+            command.append(directory);
+        }
+
+        conOut.println(command);
+        conOut.flush();
+        readConAnswer();
+        getDir();
     }
 
 }

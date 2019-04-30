@@ -10,7 +10,8 @@ public class FTPT_UI {
 
     public void run() throws IOException {
         System.out.println("You can now navigate the directory of the server and upload/download files.\n");
-        Scanner scan = new Scanner(System.in);
+        Scanner scanInt = new Scanner(System.in);
+        Scanner scanln = new Scanner(System.in);
         int selection;
 
         while (true) {
@@ -21,11 +22,11 @@ public class FTPT_UI {
                     "\t\t3\tdownload file\n" +
                     "\t\t4\tupload file\n");
 
-            selection = scan.nextInt();
+            selection = scanInt.nextInt();
             switch (selection){
                 case 0:
                     System.out.println("Closing...");
-                    scan.close();
+                    scanInt.close();
                     client.close();
                     System.exit(0);
                     break;
@@ -33,7 +34,8 @@ public class FTPT_UI {
                     client.getDir();
                     break;
                 case 2:
-                    //TODO insert folder method
+                    System.out.println("Which folder do you want to go to? (write \"..\" to go back)");
+                    client.changeDir(scanln.nextLine());
                     break;
                 case 3:
                     //TODO insert download method
