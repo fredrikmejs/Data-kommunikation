@@ -15,7 +15,7 @@ public class FTP_Client {
 
     public void startUp() throws IOException {
 
-        connect("ftp.dlptest.com", 21); //alt: test.rebex.net
+        connect("ftp.dlptest.com", 21); //alt: "test.rebex.net"
         logIn("dlpuser@dlptest.com", "5p2tvn92R0di8FdiLCfzeeT0b"); //alt: "demo","password"
         getSystem();
         //setupDataTransfer();
@@ -184,16 +184,20 @@ public class FTP_Client {
         } catch (NumberFormatException e) {
             return;
         }
+        setRepresentationType(fileName);
         setupDataTransfer();
         conOut.println("RETR " + fileName);
         conOut.flush();
         readConAnswer();
 
-        if (size < 1024) {//todo make it 1024 again
+        if (size < 1024) {
+
+            System.out.println("\n\n############# File Start ############");
             String s;
             while ((s = dataIn.readLine()) != null) {
                 System.out.println(s);
             }
+            System.out.println("############# File End ############\n");
         } else {
             File newFile = new File(localDir + "/" + fileName);
             if (newFile.exists()) {
@@ -223,6 +227,7 @@ public class FTP_Client {
             System.out.println("Error: File [" + file + "] doesn't exist");
             return;
         }
+        setRepresentationType(file.getName());
         BufferedReader reader =  new BufferedReader(new FileReader(file));
 
         setupDataTransfer();
@@ -237,6 +242,19 @@ public class FTP_Client {
         dataSocket.close();
         readConAnswer();
 
+    }
+
+    public void setRepresentationType (String file) throws IOException {
+        String fileExtension = file.split("[.]")[1];
+        if (fileExtension.equalsIgnoreCase("png")
+                || fileExtension.equalsIgnoreCase("jpg")
+                || fileExtension.equalsIgnoreCase("img")) {
+            conOut.println("TYPE I");
+        } else {
+            conOut.println("TYPE A");
+        }
+        conOut.flush();
+        readConAnswer();
     }
 
 }
