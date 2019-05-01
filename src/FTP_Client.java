@@ -15,8 +15,8 @@ public class FTP_Client {
 
     public void startUp() throws IOException {
 
-        connect("test.rebex.net", 21); //ftp.dlptest.com
-        logIn("demo","password"); //"dlpuser@dlptest", "5p2tvn92R0di8FdiLCfzeeT0b"
+        connect("ftp.dlptest.com", 21); //alt: test.rebex.net
+        logIn("dlpuser@dlptest.com", "5p2tvn92R0di8FdiLCfzeeT0b"); //alt: "demo","password"
         getSystem();
         //setupDataTransfer();
         localDir = new File(System.getProperty("user.home"));
@@ -62,7 +62,7 @@ public class FTP_Client {
         int port;
 
         conOut.println("PASV");
-        String[] reply = readConAnswer().replace(").", "").split("," );
+        String[] reply = readConAnswer().replace(")", "").replace(".", "").split("," );
         port = 256 * Integer.parseInt(reply[4]) + Integer.parseInt(reply[5]);
 
         dataSocket = new Socket(controlSocket.getInetAddress(), port); //TODO change ths to passive
@@ -174,17 +174,22 @@ public class FTP_Client {
         }
     }
 
-    public void downloadFile (String fileName) throws IOException {
+    public void downloadFile (String fileName) throws IOException { //can't download the png's properly. why?
         conOut.println("SIZE " + fileName);
         conOut.flush();
-        int size = Integer.parseInt(conIn.readLine().split(" ")[1]);
-
+        String sizeString = readConAnswer();
+        int size;
+        try {
+            size = Integer.parseInt(sizeString.split(" ")[1]);
+        } catch (NumberFormatException e) {
+            return;
+        }
         setupDataTransfer();
         conOut.println("RETR " + fileName);
         conOut.flush();
         readConAnswer();
 
-        if (size < 1024) {
+        if (size < 1024) {//todo make it 1024 again
             String s;
             while ((s = dataIn.readLine()) != null) {
                 System.out.println(s);
@@ -209,6 +214,7 @@ public class FTP_Client {
             }
 
         }
+        readConAnswer();
     }
 
     public void uploadFile (String fileName) throws IOException {
@@ -226,9 +232,9 @@ public class FTP_Client {
 
         String s;
         while ((s = reader.readLine()) != null) {
-            System.out.println(s); //TODO send to server instead of printing it
+            dataOut.println(s);
         }
-
+        dataSocket.close();
         readConAnswer();
 
     }

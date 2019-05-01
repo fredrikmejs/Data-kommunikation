@@ -53,8 +53,8 @@ public class FTPT_UI {
                     client.downloadFile(scanln.nextLine());
                     break;
                 case 6:
-                    System.out.println("Enter file location:");
-                    client.uploadFile(new File(scanln.nextLine()));
+                    System.out.println("Enter file name:");
+                    client.uploadFile(scanln.nextLine());
                     break;
                 default:
                     System.out.println("Invalid command");
