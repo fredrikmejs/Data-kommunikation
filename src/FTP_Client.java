@@ -164,9 +164,14 @@ public class FTP_Client {
         if (directory.equalsIgnoreCase("..")) {
             localDir = localDir.getParentFile();
         } else {
-            File temp = new File(localDir + "/" + directory);
-            if (temp.exists() && temp.isDirectory()) {
-                localDir = temp;
+            File file = new File(localDir + "/" + directory);
+            if (!directory.split("[\\\\/]")[0].equalsIgnoreCase("C:"))
+                file = new File(localDir + "/" + directory);
+            else
+                file = new File(directory);
+
+            if (file.exists() && file.isDirectory()) {
+                localDir = file;
                 getLocalDir();
             } else {
                 System.out.println("Directory not found");
@@ -222,7 +227,13 @@ public class FTP_Client {
     }
 
     public void uploadFile (String fileName) throws IOException {
-        File file = new File(localDir + "/" + fileName);
+        File file;
+        if (!fileName.split("[\\\\/]")[0].equalsIgnoreCase("C:"))
+            file = new File(localDir + "/" + fileName);
+        else
+            file = new File(fileName);
+
+
         if (!file.exists() && file.isFile()) {
             System.out.println("Error: File [" + file + "] doesn't exist");
             return;
@@ -231,7 +242,7 @@ public class FTP_Client {
         BufferedReader reader =  new BufferedReader(new FileReader(file));
 
         setupDataTransfer();
-        conOut.println("STOR " + fileName);
+        conOut.println("STOR " + file.getName());
         conOut.flush();
         readConAnswer();
 
